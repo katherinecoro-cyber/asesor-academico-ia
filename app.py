@@ -29,7 +29,7 @@ if st.button("Generar Asesoría Estratégica", type="primary") and nuevo_titulo:
                 genai.configure(api_key=api_key)
                 
                 # Inicializar el modelo Gemini 1.5 Flash estable y gratuito
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                model = genai.GenerativeModel("gemini-1.5-flash-latest")
                 
                 contexto_publico = f"dirigido a: {publico_objetivo}" if publico_objetivo else "para el mercado profesional general."
                 
