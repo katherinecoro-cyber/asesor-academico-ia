@@ -1,12 +1,6 @@
 import streamlit as st
+import google.generativeai as genai
 import os
-
-# Intentar importar la librería oficial de IA de Google
-try:
-    from google import genai
-    HAS_GENAI = True
-except ImportError:
-    HAS_GENAI = False
 
 st.set_page_config(
     page_title="Asesor Académico IA", 
@@ -27,14 +21,15 @@ publico_objetivo = st.text_input("Público objetivo o área (Opcional, ej: Profe
 
 if st.button("Generar Asesoría Estratégica", type="primary") and nuevo_titulo:
     if not api_key:
-        st.error("🔑 Falta configurar la `GEMINI_API_KEY` en los Secrets de Streamlit. Revisa la guía de configuración.")
-    elif not HAS_GENAI:
-        st.warning("⏳ La librería de IA se está instalando en el servidor. Espera un minuto y vuelve a intentar.")
+        st.error("🔑 Falta configurar la `GEMINI_API_KEY` en los Secrets de Streamlit.")
     else:
         with st.spinner("🤖 El Consultor IA está analizando la propuesta académica y tendencias del mercado..."):
             try:
-                # Inicializar el cliente de Gemini
-                client = genai.Client(api_key=api_key)
+                # Configuración de la API Key de Google
+                genai.configure(api_key=api_key)
+                
+                # Inicializar el modelo Gemini 1.5 Flash estable y gratuito
+                model = genai.GenerativeModel("gemini-1.5-flash")
                 
                 contexto_publico = f"dirigido a: {publico_objetivo}" if publico_objetivo else "para el mercado profesional general."
                 
@@ -60,11 +55,8 @@ if st.button("Generar Asesoría Estratégica", type="primary") and nuevo_titulo:
                 - Una sugerencia breve de qué valor agregado o proyecto práctico final se le puede ofrecer al estudiante para destacar frente a la competencia.
                 """
                 
-                # Generar contenido usando el modelo optimizado
-                response = client.models.generate_content(
-                    model='gemini-2.0-flash',
-                    contents=prompt
-                )
+                # Generar respuesta
+                response = model.generate_content(prompt)
                 
                 st.success("✨ ¡Análisis generado con éxito!")
                 st.markdown(response.text)
