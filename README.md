@@ -23,4 +23,11 @@ streamlit run app.py
 ```
 
 En Streamlit Cloud, agrega `GEMINI_API_KEY` en *Secrets*. Opcionalmente define `GEMINI_MODEL`
-(por defecto `gemini-2.5-flash`).
+para forzar un modelo concreto.
+
+## Sin errores: respaldo automático
+
+- La app prueba varios modelos de Gemini en orden (`gemini-3.6-flash`, `gemini-flash-latest`,
+  `gemini-2.5-flash`) y usa el primero que responda.
+- Si no hay clave o Gemini no responde, entra en **modo sin conexión**: genera y evalúa títulos
+  con plantillas propias del asesor, sin mostrar errores.
